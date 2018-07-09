@@ -11,34 +11,61 @@ window[objName] = {
 
   /**
    * TRAVEL TO...
-   * 1. Hong King
-   * 2. Shanghai
-   * 3. Nagasaki
-   * 4. Saigan
-   * 5. Manila
-   * 6. Singapore
-   * 7. Batavia
    */
-  destinations: [
-    { city: 'Hong Kong', hasBank: true, hasWarehouse: true, hasCharity: true }, 
-    { city: 'Shanghai', hasBank: false, hasWarehouse: false, hasCharity: false },
-    { city: 'Nagasaki', hasBank: false, hasWarehouse: false, hasCharity: false },
-    { city: 'Saigan', hasBank: false, hasWarehouse: false, hasCharity: false },
-    { city: 'Manila', hasBank: false, hasWarehouse: false, hasCharity: false },
-    { city: 'Singapore', hasBank: false, hasWarehouse: false, hasCharity: false },
-    { city: 'Batavia', hasBank: false, hasWarehouse: false, hasCharity: false },
+  locations: [{
+      city: 'Hong Kong',
+      hasBank: true,
+      hasWarehouse: true,
+      hasCharity: true
+    },
+    {
+      city: 'Shanghai',
+      hasBank: false,
+      hasWarehouse: false,
+      hasCharity: false
+    },
+    {
+      city: 'Nagasaki',
+      hasBank: false,
+      hasWarehouse: false,
+      hasCharity: false
+    },
+    {
+      city: 'Saigan',
+      hasBank: false,
+      hasWarehouse: false,
+      hasCharity: false
+    },
+    {
+      city: 'Manila',
+      hasBank: false,
+      hasWarehouse: false,
+      hasCharity: false
+    },
+    {
+      city: 'Singapore',
+      hasBank: false,
+      hasWarehouse: false,
+      hasCharity: false
+    },
+    {
+      city: 'Batavia',
+      hasBank: false,
+      hasWarehouse: false,
+      hasCharity: false
+    }
   ],
 
-  getAvailableDestinations: function(destId) {
-    if(destId) {
-      return this.destinations[destId];
+  getAvailableLocations: function (destId) {
+    if (destId) {
+      return this.locations[destId];
     } else {
-      return this.destinations;
+      return this.locations;
     }
   },
 
-  getActiveDestination: function(destId) {
-    return this.destinations[destId];
+  getActiveLocation: function (destId) {
+    return this.locations[destId];
   },
 
   /** PRODUCTS...
@@ -47,49 +74,64 @@ window[objName] = {
    * 3. Arms
    * 4. General
    */
-  products: [
-    { name: 'Opium', high: 400000, low: 1500 },
-    { name: 'Silk', high: 200000, low: 150 },
-    { name: 'Arms', high: 3500, low: 10 },
-    { name: 'General', high: 500, low: 2 }
+  products: [{
+      name: 'Opium',
+      high: 400000,
+      low: 1500
+    },
+    {
+      name: 'Silk',
+      high: 200000,
+      low: 150
+    },
+    {
+      name: 'Arms',
+      high: 3500,
+      low: 10
+    },
+    {
+      name: 'General',
+      high: 500,
+      low: 2
+    }
   ],
-  
-  updatePrice: function(payload) {
+
+  updatePrice: function (payload) {
     var high = payload.high,
-        low = payload.low;
+      low = payload.low;
 
     return Math.floor(Math.random() * (high - low + 1)) + low;
   },
-  
-  getAvailableProducts: function(payload) {
+
+  getAvailableProducts: function (payload) {
     var prodId = (payload && payload.prodId) ? payload.prodId : '';
 
-    if(prodId) {
+    if (prodId) {
       var returnProduct = this.products[prodId];
       returnProduct.id = prodId;
       return returnProduct;
     } else {
       var action = (payload && payload.action) ? payload.action : '';
 
-      if(action === 'updatePrice') {
-        for(var i = 0, max = this.products.length; i < max; i++) {
+      if (action === 'updatePrice') {
+        for (var i = 0, max = this.products.length; i < max; i++) {
           this.products[i].current = this.updatePrice(this.products[i]);
         }
       }
-      
+
       return this.products;
     }
   },
 
-  getOwnedProducts: function(prodId) {
+  getOwnedProducts: function (prodId) {
     return this.ownedProducts;
   },
 
-  buildWarehouse: function(products) {
-    
+  buildWarehouse: function (products) {
+
   },
 
-  getWarehousedProducts: function() {
+  getWarehousedProducts: function () {
     return this.warehouse;
   },
 
@@ -102,7 +144,7 @@ window[objName] = {
    *    c. Throw cargo
    *    d. Li Yuen runs them off
    */
-  travel: function(destId) {
+  travel: function (destId) {
     this.arrive(destId);
   },
 
@@ -117,18 +159,20 @@ window[objName] = {
    * 3. All locations EXCEPT Hong Kong
    *    a. Li Yuen wants you in Hong Kong post haste (msg only)
    */
-  arrive: function(destId) {
-    this.getAvailableProducts({ action: 'updatePrice' });
-    console.table(this.products);
+  arrive: function (destId) {
+    this.getAvailableProducts({
+      action: 'updatePrice'
+    });
+    console.log('products:', this.products);
 
     this.getOwnedProducts();
-    console.table(this.ownedProducts);
+    console.log('owned products:', this.ownedProducts);
 
     this.getWarehousedProducts();
-    console.table(this.getWarehousedProducts);
+    console.log('warehoused products:', this.getWarehousedProducts());
 
-    console.log(this.getActiveDestination(destId));
-    console.table(this.getAvailableDestinations());
+    console.log('active location:', this.getActiveLocation(destId));
+    console.log('all locations:', this.getAvailableLocations());
   }
 
   /** ACTIONS...
